@@ -1,14 +1,20 @@
 import { db } from "@/db";
-import { posts } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { contentItems } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
 export default async function NewsPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [post] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+  const [post] = await db
+    .select()
+    .from(contentItems)
+    .where(and(eq(contentItems.type, "posts"), eq(contentItems.slug, slug)))
+    .limit(1);
 
   if (!post || !post.published) notFound();
+
+  const data = post.data as Record<string, string>;
 
   return (
     <>
@@ -23,12 +29,12 @@ export default async function NewsPostPage({ params }: { params: Promise<{ slug:
           {new Date(post.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
         </p>
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-white leading-tight">
-          {post.title}
+          {data.title}
         </h1>
       </section>
 
       <section className="border-t border-white/5 max-w-3xl mx-auto px-6 md:px-12 py-16">
-        <div className="text-white/60 leading-relaxed whitespace-pre-wrap">{post.content}</div>
+        <div className="text-white/60 leading-relaxed whitespace-pre-wrap">{data.content}</div>
       </section>
     </>
   );

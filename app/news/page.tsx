@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { posts } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { contentItems } from "@/db/schema";
+import { and, desc, eq } from "drizzle-orm";
 import Link from "next/link";
 
 export const metadata = {
@@ -11,9 +11,9 @@ export const metadata = {
 export default async function NewsPage() {
   const publishedPosts = await db
     .select()
-    .from(posts)
-    .where(eq(posts.published, true))
-    .orderBy(desc(posts.createdAt));
+    .from(contentItems)
+    .where(and(eq(contentItems.type, "posts"), eq(contentItems.published, true)))
+    .orderBy(desc(contentItems.createdAt));
 
   return (
     <>
@@ -40,7 +40,7 @@ export default async function NewsPage() {
                   {new Date(post.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
                 </span>
                 <h2 className="text-white text-xl md:text-2xl font-medium flex-1 group-hover:text-white/80 transition-colors">
-                  {post.title}
+                  {String((post.data as Record<string, unknown>).title ?? "")}
                 </h2>
                 <svg className="hidden md:block text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M5 12h14M12 5l7 7-7 7" />
