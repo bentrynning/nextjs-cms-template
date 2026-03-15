@@ -43,7 +43,7 @@ export default function Home() {
       {/* ─── Hero ─────────────────────────────────────────────── */}
       <section className="relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
         {/* Replace this div with a <video> or <Image> background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-[#0a0a0a]" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-[#0a0a0a]" />
 
         <div className="relative flex h-full flex-col justify-end px-6 pb-24 md:px-12 max-w-7xl mx-auto">
           <p className="text-[#95ef7f]/80 uppercase tracking-widest text-xs mb-6">
